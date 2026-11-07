@@ -21,7 +21,7 @@ const app = express();
 // ✅ Allow local dev + your deployed frontend
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://YOUR-FRONTEND-NAME.onrender.com', // ← replace after deploy
+  'https://i7-frontend.onrender.com', // ← replace after deploy
 ];
 app.use(cors({
   origin: (origin, cb) => {

@@ -1,0 +1,6 @@
+node_modules/
+i7-backend/node_modules/
+i7-frontend/node_modules/
+.env
+database.sqlite
+uploads/
