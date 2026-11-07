@@ -540,7 +540,7 @@ const AdminDashboard = () => {
                                         <tr key={prod.id} className="hover:bg-gray-50 transition-colors">
                                             <td className="p-4 flex items-center gap-3">
                                                 {/* ✅ FIXED IMAGE URL HERE */}
-                                                <img src={prod.images?.[0] ? `${BACKEND_URL}${prod.images[0]}` : 'https://via.placeholder.com/40'} alt={prod.name} className="w-12 h-12 object-contain bg-gray-100 rounded-md p-1" />
+                                                <img src={prod.images?.[0] ? (prod.images[0].startsWith('http') ? prod.images[0] : `${BACKEND_URL}${prod.images[0]}`) : 'https://via.placeholder.com/40'} alt={prod.name} className="w-12 h-12 object-contain bg-gray-100 rounded-md p-1" />
                                                 <span className="font-semibold text-gray-800">{prod.name}</span>
                                             </td>
                                             <td className="p-4 text-gray-600">{prod.Category?.name || 'N/A'}</td>
@@ -573,7 +573,7 @@ const AdminDashboard = () => {
                                         <tr key={cat.id} className="hover:bg-gray-50">
                                             <td className="p-4 text-gray-500">#{cat.id}</td>
                                             {/* ✅ FIXED IMAGE URL HERE */}
-                                            <td className="p-4"><img src={cat.image ? `${BACKEND_URL}${cat.image}` : 'https://via.placeholder.com/40'} alt={cat.name} className="w-10 h-10 object-contain bg-gray-100 rounded-md" /></td>
+                                            <td className="p-4"><img src={cat.image ? (cat.image.startsWith('http') ? cat.image : `${BACKEND_URL}${cat.image}`) : 'https://via.placeholder.com/40'} alt={cat.name} className="w-10 h-10 object-contain bg-gray-100 rounded-md" /></td>
                                             <td className="p-4 font-semibold text-gray-800">{cat.name}</td>
                                             <td className="p-4 text-gray-600">{cat.description || '-'}</td>
                                         </tr>
