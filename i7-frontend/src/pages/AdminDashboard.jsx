@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { FiUsers, FiShoppingBag, FiDollarSign, FiLogOut, FiActivity, FiBox, FiEdit, FiTrash2, FiTag, FiPlus, FiX, FiImage, FiArrowUp, FiSettings, FiPercent, FiList } from 'react-icons/fi';
 import axiosInstance from '../api/axiosInstance';
 
+// ✅ ADDED THIS LINE TO FIX IMAGES ON LIVE SITE
+const BACKEND_URL = import.meta.env.VITE_IMAGE_URL || 'http://localhost:5000';
+
 const AdminDashboard = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
@@ -536,7 +539,8 @@ const AdminDashboard = () => {
                                     {products.map(prod => (
                                         <tr key={prod.id} className="hover:bg-gray-50 transition-colors">
                                             <td className="p-4 flex items-center gap-3">
-                                                <img src={prod.images?.[0] ? `http://localhost:5000${prod.images[0]}` : 'https://via.placeholder.com/40'} alt={prod.name} className="w-12 h-12 object-contain bg-gray-100 rounded-md p-1" />
+                                                {/* ✅ FIXED IMAGE URL HERE */}
+                                                <img src={prod.images?.[0] ? `${BACKEND_URL}${prod.images[0]}` : 'https://via.placeholder.com/40'} alt={prod.name} className="w-12 h-12 object-contain bg-gray-100 rounded-md p-1" />
                                                 <span className="font-semibold text-gray-800">{prod.name}</span>
                                             </td>
                                             <td className="p-4 text-gray-600">{prod.Category?.name || 'N/A'}</td>
@@ -568,7 +572,8 @@ const AdminDashboard = () => {
                                     {categories.map(cat => (
                                         <tr key={cat.id} className="hover:bg-gray-50">
                                             <td className="p-4 text-gray-500">#{cat.id}</td>
-                                            <td className="p-4"><img src={cat.image ? `http://localhost:5000${cat.image}` : 'https://via.placeholder.com/40'} alt={cat.name} className="w-10 h-10 object-contain bg-gray-100 rounded-md" /></td>
+                                            {/* ✅ FIXED IMAGE URL HERE */}
+                                            <td className="p-4"><img src={cat.image ? `${BACKEND_URL}${cat.image}` : 'https://via.placeholder.com/40'} alt={cat.name} className="w-10 h-10 object-contain bg-gray-100 rounded-md" /></td>
                                             <td className="p-4 font-semibold text-gray-800">{cat.name}</td>
                                             <td className="p-4 text-gray-600">{cat.description || '-'}</td>
                                         </tr>
@@ -622,7 +627,8 @@ const AdminDashboard = () => {
                                     ) : (
                                         banners.map(b => (
                                             <tr key={b.id} className="hover:bg-gray-50 transition-colors">
-                                                <td className="p-4"><img src={b.image.startsWith('http') ? b.image : `http://localhost:5000${b.image}`} alt="Banner" className="w-32 h-16 object-cover rounded border" /></td>
+                                                {/* ✅ FIXED IMAGE URL HERE */}
+                                                <td className="p-4"><img src={b.image.startsWith('http') ? b.image : `${BACKEND_URL}${b.image}`} alt="Banner" className="w-32 h-16 object-cover rounded border" /></td>
                                                 <td className="p-4 font-semibold text-gray-800">{b.title || 'N/A'}</td>
                                                 <td className="p-4"><span className="bg-blue-50 text-blue-700 px-3 py-1 rounded text-xs font-bold">{b.position === 1 ? 'Top Challenge' : b.position === 2 ? 'Hero Banner' : 'Bottom Footer'}</span></td>
                                                 <td className="p-4 flex justify-center gap-3">
@@ -680,7 +686,6 @@ const AdminDashboard = () => {
                                 <div>
                                     <label className="block text-sm font-bold text-gray-700 mb-2">Standard Shipping Charge (₹)</label>
                                     <p className="text-xs text-gray-500 mb-2">This amount will be added to <strong>ALL orders below ₹500</strong> (Online & COD).</p>
-                                    {/* ✅ EXACT LOCATION FOR SHIPPING INPUT */}
                                     <input
                                         type="number"
                                         required
@@ -693,7 +698,6 @@ const AdminDashboard = () => {
                                 <div>
                                     <label className="block text-sm font-bold text-gray-700 mb-2">COD Extra Charge (₹)</label>
                                     <p className="text-xs text-gray-500 mb-2">This amount will be added <strong>ONLY if the user selects Cash on Delivery</strong>.</p>
-                                    {/* ✅ EXACT LOCATION FOR COD INPUT */}
                                     <input
                                         type="number"
                                         required
@@ -814,7 +818,8 @@ const AdminDashboard = () => {
                                     <div key={index} className="flex flex-col md:flex-row gap-3 items-start mb-4 bg-white p-3 rounded-lg border border-gray-200 shadow-sm relative">
                                         <button type="button" onClick={() => removeIngredient(index)} className="absolute top-2 right-2 text-red-400 hover:text-red-600"><FiX size={16} /></button>
                                         <div className="w-20 h-20 border border-gray-300 rounded-lg flex flex-col items-center justify-center overflow-hidden relative cursor-pointer flex-shrink-0 bg-gray-50">
-                                            {ing.img ? <img src={URL.createObjectURL(ing.img)} alt="ing" className="w-full h-full object-contain" /> : ing.existingImg ? <img src={`http://localhost:5000${ing.existingImg}`} alt="ing" className="w-full h-full object-contain" /> : <><FiImage className="text-gray-400 mb-1" /><span className="text-[9px] text-gray-400">Image</span></>}
+                                            {/* ✅ FIXED IMAGE URL HERE */}
+                                            {ing.img ? <img src={URL.createObjectURL(ing.img)} alt="ing" className="w-full h-full object-contain" /> : ing.existingImg ? <img src={`${BACKEND_URL}${ing.existingImg}`} alt="ing" className="w-full h-full object-contain" /> : <><FiImage className="text-gray-400 mb-1" /><span className="text-[9px] text-gray-400">Image</span></>}
                                             <input type="file" accept="image/*" onChange={(e) => handleIngredientImage(index, e.target.files[0])} className="absolute inset-0 opacity-0 cursor-pointer" />
                                         </div>
                                         <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-2 w-full">
@@ -878,7 +883,8 @@ const AdminDashboard = () => {
                                                 <div className="flex flex-wrap gap-2 mb-2">
                                                     {flav.existingImgs && flav.existingImgs.map((img, i) => (
                                                         <div key={`exist-${i}`} className="w-12 h-12 border border-gray-300 rounded overflow-hidden">
-                                                            <img src={`http://localhost:5000${img}`} alt="existing" className="w-full h-full object-cover" />
+                                                            {/* ✅ FIXED IMAGE URL HERE */}
+                                                            <img src={`${BACKEND_URL}${img}`} alt="existing" className="w-full h-full object-cover" />
                                                         </div>
                                                     ))}
                                                     {flav.imgs && flav.imgs.map((file, i) => (
@@ -938,7 +944,8 @@ const AdminDashboard = () => {
                                                     <div key={iIdx} className="flex flex-col md:flex-row gap-2 items-start mb-2 bg-gray-50 p-2 rounded border relative">
                                                         <button type="button" onClick={() => removeFlavourIngredient(index, iIdx)} className="absolute top-1 right-1 text-red-400"><FiX size={12} /></button>
                                                         <div className="w-12 h-12 border border-gray-300 rounded flex items-center justify-center overflow-hidden relative cursor-pointer bg-white">
-                                                            {fIng.img ? <img src={URL.createObjectURL(fIng.img)} className="w-full h-full object-cover" /> : fIng.existingImg ? <img src={`http://localhost:5000${fIng.existingImg}`} className="w-full h-full object-cover" /> : <FiImage className="text-gray-400" />}
+                                                            {/* ✅ FIXED IMAGE URL HERE */}
+                                                            {fIng.img ? <img src={URL.createObjectURL(fIng.img)} className="w-full h-full object-cover" /> : fIng.existingImg ? <img src={`${BACKEND_URL}${fIng.existingImg}`} className="w-full h-full object-cover" /> : <FiImage className="text-gray-400" />}
                                                             <input type="file" accept="image/*" onChange={(e) => handleFlavourIngredientImage(index, iIdx, e.target.files[0])} className="absolute inset-0 opacity-0 cursor-pointer" />
                                                         </div>
                                                         <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-2 w-full mt-1">
@@ -960,7 +967,8 @@ const AdminDashboard = () => {
                                                     <div key={sIdx} className="flex flex-col md:flex-row gap-2 items-start mb-2 bg-gray-50 p-2 rounded border relative">
                                                         <button type="button" onClick={() => removeFlavourHowToUse(index, sIdx)} className="absolute top-1 right-1 text-red-400"><FiX size={12} /></button>
                                                         <div className="w-12 h-12 border border-gray-300 rounded flex items-center justify-center overflow-hidden relative cursor-pointer bg-white">
-                                                            {fHow.img ? <img src={URL.createObjectURL(fHow.img)} className="w-full h-full object-cover" /> : fHow.existingImg ? <img src={`http://localhost:5000${fHow.existingImg}`} className="w-full h-full object-cover" /> : <FiImage className="text-gray-400" />}
+                                                            {/* ✅ FIXED IMAGE URL HERE */}
+                                                            {fHow.img ? <img src={URL.createObjectURL(fHow.img)} className="w-full h-full object-cover" /> : fHow.existingImg ? <img src={`${BACKEND_URL}${fHow.existingImg}`} className="w-full h-full object-cover" /> : <FiImage className="text-gray-400" />}
                                                             <input type="file" accept="image/*" onChange={(e) => handleFlavourHowToUseImage(index, sIdx, e.target.files[0])} className="absolute inset-0 opacity-0 cursor-pointer" />
                                                         </div>
                                                         <div className="flex-1 w-full mt-1">
@@ -986,7 +994,8 @@ const AdminDashboard = () => {
                                     <div key={index} className="flex flex-col md:flex-row gap-3 items-start mb-4 bg-white p-3 rounded-lg border border-gray-200 shadow-sm relative">
                                         <button type="button" onClick={() => removeHowToUse(index)} className="absolute top-2 right-2 text-red-400 hover:text-red-600"><FiX size={16} /></button>
                                         <div className="w-20 h-20 border border-gray-300 rounded-lg flex flex-col items-center justify-center overflow-hidden relative cursor-pointer flex-shrink-0 bg-gray-50">
-                                            {step.img ? <img src={URL.createObjectURL(step.img)} alt="step" className="w-full h-full object-contain" /> : step.existingImg ? <img src={`http://localhost:5000${step.existingImg}`} alt="step" className="w-full h-full object-contain" /> : <><FiImage className="text-gray-400 mb-1" /><span className="text-[9px] text-gray-400">Image</span></>}
+                                            {/* ✅ FIXED IMAGE URL HERE */}
+                                            {step.img ? <img src={URL.createObjectURL(step.img)} alt="step" className="w-full h-full object-contain" /> : step.existingImg ? <img src={`${BACKEND_URL}${step.existingImg}`} alt="step" className="w-full h-full object-contain" /> : <><FiImage className="text-gray-400 mb-1" /><span className="text-[9px] text-gray-400">Image</span></>}
                                             <input type="file" accept="image/*" onChange={(e) => handleHowToUseImage(index, e.target.files[0])} className="absolute inset-0 opacity-0 cursor-pointer" />
                                         </div>
                                         <div className="flex-1 w-full mt-2 md:mt-0">
