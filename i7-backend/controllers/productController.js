@@ -3,12 +3,21 @@ const Category = require('../models/Category');
 const fs = require('fs');
 const path = require('path');
 
+const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:5000';
+
+// ✅ Helper to fix image URLs
+const fixImageUrl = (imgPath) => {
+  if (!imgPath) return imgPath;
+  if (imgPath.startsWith('http')) return imgPath;
+  return `${BACKEND_URL}${imgPath.startsWith('/') ? '' : '/'}${imgPath}`;
+};
+
 // ✅ Helper function to physically rename files on the server
 const renameFile = (oldPath, newName) => {
   if (!oldPath) return null;
-  const oldAbsolutePath = path.join(__dirname, '..', oldPath); // e.g. uploads/1234.png
-  const dir = path.dirname(oldAbsolutePath); // uploads
-  const newAbsolutePath = path.join(dir, newName); // uploads/product-cola-1234.png
+  const oldAbsolutePath = path.join(__dirname, '..', oldPath);
+  const dir = path.dirname(oldAbsolutePath);
+  const newAbsolutePath = path.join(dir, newName);
   const newRelativePath = `/uploads/${newName}`;
 
   try {
@@ -25,7 +34,28 @@ const renameFile = (oldPath, newName) => {
 exports.getProducts = async (req, res) => {
   try {
     const products = await Product.findAll({ include: Category });
-    res.json(products);
+    
+    // ✅ FIX IMAGES BEFORE SENDING TO FRONTEND
+    const fixedProducts = products.map(p => {
+      const product = p.toJSON();
+      if (product.images && Array.isArray(product.images)) {
+        product.images = product.images.map(fixImageUrl);
+      }
+      if (product.flavours) {
+        try {
+          let flavours = JSON.parse(product.flavours);
+          flavours = flavours.map(f => ({
+             ...f,
+             img: fixImageUrl(f.img),
+             imgs: f.imgs ? f.imgs.map(fixImageUrl) : []
+          }));
+          product.flavours = JSON.stringify(flavours);
+        } catch(e) {}
+      }
+      return product;
+    });
+
+    res.json(fixedProducts);
   } catch (error) { res.status(500).json({ message: error.message }); }
 };
 
@@ -39,7 +69,6 @@ exports.createProduct = async (req, res) => {
     let parsedFlavours = [];
 
     if (req.files) {
-      // ✅ 1. Main Product Images (Rename based on linked flavour)
       if (req.files['images']) {
         const parsedMap = imageFlavoursMap ? JSON.parse(imageFlavoursMap) : [];
         imageUrls = req.files['images'].map((file, index) => {
@@ -51,7 +80,6 @@ exports.createProduct = async (req, res) => {
         });
       }
 
-      // ✅ 2. Ingredients
       if (req.files['ingredientImages'] && ingredientsData) {
         const ingredientImages = req.files['ingredientImages'];
         parsedIngredients = JSON.parse(ingredientsData).map((ing, index) => {
@@ -65,7 +93,6 @@ exports.createProduct = async (req, res) => {
         });
       }
 
-      // ✅ 3. How to Use
       if (req.files['howToUseImages'] && howToUseData) {
         const howToUseImages = req.files['howToUseImages'];
         parsedHowToUse = JSON.parse(howToUseData).map((step, index) => {
@@ -79,13 +106,10 @@ exports.createProduct = async (req, res) => {
         });
       }
 
-      // ✅ 4. Flavours (Rename based exactly on the index of flavoursData)
       if (flavoursData) {
         parsedFlavours = JSON.parse(flavoursData).map((flav, index) => {
           const imagesForThisFlavour = [];
           const safeFlavourName = flav.name ? flav.name.replace(/\s+/g, '_').toLowerCase() : 'unknown';
-          
-          // ✅ Look for the specific indexed file sent from frontend
           const fileKey = `flavourImage_${index}`;
           const file = req.files[fileKey] ? req.files[fileKey][0] : null;
 
@@ -179,12 +203,9 @@ exports.updateProduct = async (req, res) => {
 
       if (req.body.flavoursData) {
           let parsedFlavours = JSON.parse(req.body.flavoursData);
-          
           parsedFlavours = parsedFlavours.map((flav, index) => {
               const imagesForThisFlavour = [];
               const safeFlavourName = flav.name ? flav.name.replace(/\s+/g, '_').toLowerCase() : 'unknown';
-              
-              // ✅ Look for the specific indexed file sent from frontend
               const fileKey = `flavourImage_${index}`;
               const file = req.files[fileKey] ? req.files[fileKey][0] : null;
 
@@ -230,6 +251,24 @@ exports.getProductById = async (req, res) => {
   try {
     const product = await Product.findByPk(req.params.id, { include: Category });
     if (!product) return res.status(404).json({ message: 'Product not found' });
-    res.json(product);
+    
+    // ✅ FIX IMAGES BEFORE SENDING
+    const p = product.toJSON();
+    if (p.images && Array.isArray(p.images)) {
+      p.images = p.images.map(img => fixImageUrl(img));
+    }
+    if (p.flavours) {
+      try {
+        let flavours = JSON.parse(p.flavours);
+        flavours = flavours.map(f => ({
+            ...f,
+            img: fixImageUrl(f.img),
+            imgs: f.imgs ? f.imgs.map(fixImageUrl) : []
+        }));
+        p.flavours = JSON.stringify(flavours);
+      } catch(e) {}
+    }
+    
+    res.json(p);
   } catch (error) { res.status(500).json({ message: error.message }); }
 };

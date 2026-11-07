@@ -1,9 +1,21 @@
 const Category = require('../models/Category');
 
+const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:5000';
+
 exports.getCategories = async (req, res) => {
   try {
     const categories = await Category.findAll();
-    res.json(categories);
+    
+    // ✅ FIX IMAGES BEFORE SENDING
+    const fixedCategories = categories.map(c => {
+      const category = c.toJSON();
+      if (category.image && !category.image.startsWith('http')) {
+        category.image = `${BACKEND_URL}${category.image.startsWith('/') ? '' : '/'}${category.image}`;
+      }
+      return category;
+    });
+
+    res.json(fixedCategories);
   } catch (error) { res.status(500).json({ message: error.message }); }
 };
 
@@ -13,12 +25,9 @@ exports.createCategory = async (req, res) => {
     
     let finalImage = null;
 
-    // 1. Check if a file was uploaded
     if (req.file) {
       finalImage = `/uploads/${req.file.filename}`;
-    } 
-    // 2. If no file uploaded, check if a URL was provided
-    else if (imageUrl && imageUrl.trim() !== '') {
+    } else if (imageUrl && imageUrl.trim() !== '') {
       finalImage = imageUrl;
     }
 

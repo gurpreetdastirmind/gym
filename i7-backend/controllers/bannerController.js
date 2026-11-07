@@ -1,9 +1,21 @@
 const Banner = require('../models/Banner');
 
+const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:5000';
+
 exports.getBanners = async (req, res) => {
   try {
     const banners = await Banner.findAll({ order: [['position', 'ASC']] });
-    res.json(banners);
+    
+    // ✅ FIX IMAGES BEFORE SENDING
+    const fixedBanners = banners.map(b => {
+      const banner = b.toJSON();
+      if (banner.image && !banner.image.startsWith('http')) {
+        banner.image = `${BACKEND_URL}${banner.image.startsWith('/') ? '' : '/'}${banner.image}`;
+      }
+      return banner;
+    });
+
+    res.json(fixedBanners);
   } catch (error) { res.status(500).json({ message: error.message }); }
 };
 

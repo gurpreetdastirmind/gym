@@ -36,7 +36,6 @@ exports.validateCoupon = async (req, res) => {
   }
 };
 
-// ✅ Get all coupons for Admin
 exports.getCoupons = async (req, res) => {
   try {
     const coupons = await Coupon.findAll({ order: [['createdAt', 'DESC']] });
@@ -44,7 +43,6 @@ exports.getCoupons = async (req, res) => {
   } catch (error) { res.status(500).json({ message: error.message }); }
 };
 
-// ✅ Create Coupon
 exports.createCoupon = async (req, res) => {
   try {
     const { code, discountType, discountValue, minOrderValue } = req.body;
@@ -56,7 +54,6 @@ exports.createCoupon = async (req, res) => {
   } catch (error) { res.status(500).json({ message: error.message }); }
 };
 
-// ✅ Update Coupon
 exports.updateCoupon = async (req, res) => {
   try {
     const coupon = await Coupon.findByPk(req.params.id);
@@ -66,7 +63,6 @@ exports.updateCoupon = async (req, res) => {
   } catch (error) { res.status(500).json({ message: error.message }); }
 };
 
-// ✅ Delete Coupon
 exports.deleteCoupon = async (req, res) => {
   try {
     const coupon = await Coupon.findByPk(req.params.id);
@@ -76,12 +72,10 @@ exports.deleteCoupon = async (req, res) => {
   } catch (error) { res.status(500).json({ message: error.message }); }
 };
 
-// ✅ Get Settings (Charges)
 exports.getSettings = async (req, res) => {
   try {
     const settings = await Setting.findAll();
     const obj = settings.reduce((acc, curr) => ({ ...acc, [curr.key]: curr.value }), {});
-    // If DB is empty, send defaults
     res.json({ 
       codCharge: obj.codCharge || '110', 
       shippingCharge: obj.shippingCharge || '110' 
