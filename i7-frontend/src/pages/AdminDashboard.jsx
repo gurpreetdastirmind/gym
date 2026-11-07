@@ -4,7 +4,7 @@ import { FiUsers, FiShoppingBag, FiDollarSign, FiLogOut, FiActivity, FiBox, FiEd
 import axiosInstance from '../api/axiosInstance';
 
 // ✅ ADDED THIS LINE TO FIX IMAGES ON LIVE SITE
-const BACKEND_URL = import.meta.env.VITE_IMAGE_URL || 'http://localhost:5000';
+const BACKEND_URL = 'https://i7-backend.onrender.com';
 
 const AdminDashboard = () => {
     const navigate = useNavigate();
