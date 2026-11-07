@@ -86,7 +86,7 @@ const ProductDetails = () => {
 
   function getImageUrl(imgPath) {
     if (!imgPath) return '/assets/product-placeholder.jpg';
-    return imgPath.startsWith('http') ? imgPath : `http://localhost:5000${imgPath}`;
+    return imgPath.startsWith('http') ? imgPath : `https://i7-backend.onrender.com${imgPath}`;
   };
 
   let rawImagesArray = [];

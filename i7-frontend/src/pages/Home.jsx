@@ -54,7 +54,7 @@ const Home = () => {
   // Helper to get full image URL (handles uploaded files vs external URLs)
   const getImageUrl = (imgPath) => {
     if (!imgPath) return 'https://via.placeholder.com/300?text=No+Image';
-    return imgPath.startsWith('http') ? imgPath : `http://localhost:5000${imgPath}`;
+    return imgPath.startsWith('http') ? imgPath : `https://i7-backend.onrender.com${imgPath}`;
   };
 
   const topBanners = banners.filter(b => b.position === 1 || b.position === 2);

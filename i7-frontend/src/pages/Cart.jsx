@@ -14,7 +14,7 @@ const Cart = () => {
 
   const getImageUrl = (imgPath) => {
     if (!imgPath) return 'https://via.placeholder.com/300?text=No+Image';
-    return imgPath.startsWith('http') ? imgPath : `http://localhost:5000${imgPath}`;
+    return imgPath.startsWith('http') ? imgPath : `https://i7-backend.onrender.com${imgPath}`;
   };
 
   // ✅ UPDATE CALCULATIONS TO INCLUDE COUPON DISCOUNT

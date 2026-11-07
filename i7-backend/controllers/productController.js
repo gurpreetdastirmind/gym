@@ -3,7 +3,7 @@ const Category = require('../models/Category');
 const fs = require('fs');
 const path = require('path');
 
-const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:5000';
+const BACKEND_URL = process.env.BACKEND_URL || 'https://i7-backend.onrender.com';
 
 // ✅ Helper to fix image URLs
 const fixImageUrl = (imgPath) => {

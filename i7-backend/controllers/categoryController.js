@@ -1,6 +1,6 @@
 const Category = require('../models/Category');
 
-const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:5000';
+const BACKEND_URL = process.env.BACKEND_URL || 'https://i7-backend.onrender.com';
 
 exports.getCategories = async (req, res) => {
   try {

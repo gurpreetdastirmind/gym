@@ -1,6 +1,6 @@
 const Banner = require('../models/Banner');
 
-const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:5000';
+const BACKEND_URL = process.env.BACKEND_URL || 'https://i7-backend.onrender.com';
 
 exports.getBanners = async (req, res) => {
   try {
